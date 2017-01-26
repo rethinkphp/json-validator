@@ -16,9 +16,6 @@
         "phpunit/phpunit": "~5.0"
     },
     "autoload": {
-        "files": [
-            "src/support/helpers.php"
-        ],
         "psr-4": {
             "rethink\\jsv\\": "src",
             "rethink\\jsv\\tests\\": "tests"
