@@ -23,7 +23,7 @@ class Validator
     {
         return [
             'integer' => 'is_integer',
-            'float' => 'is_float',
+            'double' => 'is_double',
             'boolean' => 'is_bool',
             'string' => 'is_string',
             'number' => [$this, 'isNumber'],
@@ -86,10 +86,10 @@ class Validator
     /**
      * Add a new type.
      *
-     * @param $type
-     * @param $definition
+     * @param string $type
+     * @param mixed $definition
      */
-    public function addType($type, $definition)
+    public function addType(string $type, $definition)
     {
         if (isset($this->types[$type])) {
             throw new \InvalidArgumentException("The type: $type is already exists");
@@ -111,7 +111,7 @@ class Validator
         $this->errors[$key] = $message;
     }
 
-    public function reset()
+    protected function reset()
     {
         $this->errors = [];
     }

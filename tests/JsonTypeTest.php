@@ -12,7 +12,7 @@ use rethink\jsv\Validator;
  */
 class JsonTypeTest extends PHPUnit_Framework_TestCase
 {
-    protected function createJsonType()
+    protected function createValidator()
     {
         return new Validator();
     }
@@ -23,7 +23,7 @@ class JsonTypeTest extends PHPUnit_Framework_TestCase
             ['string', 'foobar', true],
             ['string', 123, false],
             ['integer', 123, true],
-            ['float', 123.1, true],
+            ['double', 123.1, true],
 
             ['number', 123.1, true],
             ['number', 234, true],
@@ -44,7 +44,7 @@ class JsonTypeTest extends PHPUnit_Framework_TestCase
      */
     public function testMatchBasicTypes($type, $data, $result)
     {
-        $json = $this->createJsonType();
+        $json = $this->createValidator();
 
         $method = $result ? 'assertTrue' : 'assertFalse';
 
@@ -73,7 +73,7 @@ class JsonTypeTest extends PHPUnit_Framework_TestCase
 
     public function testMatchCustomType()
     {
-        $json = $this->createJsonType();
+        $json = $this->createValidator();
 
         $json->addType('user', $this->userType());
 
@@ -83,7 +83,7 @@ class JsonTypeTest extends PHPUnit_Framework_TestCase
 
     public function testMatchArrayOfCustomType()
     {
-        $json = $this->createJsonType();
+        $json = $this->createValidator();
 
         $json->addType('user', $this->userType());
 
@@ -92,7 +92,7 @@ class JsonTypeTest extends PHPUnit_Framework_TestCase
 
     public function testAddCustomTypeThroughCallable()
     {
-        $json = $this->createJsonType();
+        $json = $this->createValidator();
 
         $json->addType('timestamp', function ($value) {
             if ((!is_string($value) && !is_numeric($value)) || strtotime($value) === false) {
@@ -174,7 +174,7 @@ class JsonTypeTest extends PHPUnit_Framework_TestCase
      */
     public function testErrorMessages($value, $type, $key, $message)
     {
-        $json = $this->createJsonType();
+        $json = $this->createValidator();
 
         $this->assertFalse($json->matches($value, $type));
         $this->assertEquals($message, $json->getErrors()[$key] ?? '');
