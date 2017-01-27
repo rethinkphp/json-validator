@@ -153,8 +153,8 @@ class JsonTypeTest extends PHPUnit_Framework_TestCase
             [
                 [1, 2, 3],
                 ['string'],
-                '$.0',
-                "The path of '$.0' requires to be a string, integer is given",
+                '$[0]',
+                "The path of '$[0]' requires to be a string, integer is given",
             ],
             [
                 [
@@ -163,8 +163,8 @@ class JsonTypeTest extends PHPUnit_Framework_TestCase
                 [
                     'foo' => ['string'],
                 ],
-                '$.foo.0',
-                "The path of '$.foo.0' requires to be a string, integer is given",
+                '$.foo[0]',
+                "The path of '$.foo[0]' requires to be a string, integer is given",
             ],
         ];
     }

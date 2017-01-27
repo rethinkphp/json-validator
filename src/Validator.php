@@ -44,7 +44,8 @@ class Validator
                 }
 
                 $givenType = $this->getType($value);
-                $path = implode('.', $this->path);
+
+                $path = $this->getNormalizedPath();
 
                 $this->addError($path, "The path of '$path' requires to be a $type, $givenType is given");
 
@@ -101,6 +102,14 @@ class Validator
     protected $errors = [];
     protected $path = ['$'];
 
+    protected function getNormalizedPath()
+    {
+        return strtr(implode('.', $this->path), [
+            '.[' => '[',
+            '].' => ']',
+        ]);
+    }
+
     public function getErrors()
     {
         return $this->errors;
@@ -152,7 +161,7 @@ class Validator
         $definition = $definition[0];
 
         foreach ($data as $index => $row) {
-            array_push($this->path, $index);
+            array_push($this->path, '[' . $index . ']');
             $result = $this->matchInternal($row, $definition);
             array_pop($this->path);
 
