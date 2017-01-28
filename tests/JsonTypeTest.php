@@ -14,7 +14,11 @@ class JsonTypeTest extends PHPUnit_Framework_TestCase
 {
     protected function createValidator()
     {
-        return new Validator();
+        $validator = new Validator();
+
+        $validator->addType('timestamp', $this->timestampValidator());
+
+        return $validator;
     }
 
     public function basicTypes()
@@ -90,11 +94,9 @@ class JsonTypeTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($json->matches([$this->userData()], ['user']));
     }
 
-    public function testAddCustomTypeThroughCallable()
+    protected function timestampValidator()
     {
-        $json = $this->createValidator();
-
-        $json->addType('timestamp', function ($value) {
+        return function ($value) {
             if ((!is_string($value) && !is_numeric($value)) || strtotime($value) === false) {
                 return false;
             }
@@ -102,7 +104,13 @@ class JsonTypeTest extends PHPUnit_Framework_TestCase
             $date = date_parse($value);
 
             return checkdate($date['month'], $date['day'], $date['year']);
-        });
+        };
+    }
+
+    public function testAddCustomTypeThroughCallable()
+    {
+        $json = $this->createValidator();
+
 
         $this->assertTrue($json->matches('2017-01-01 00:00:00', 'timestamp'));
         $this->assertFalse($json->matches('2017-01-91 00:00:00', 'timestamp'));
@@ -166,6 +174,21 @@ class JsonTypeTest extends PHPUnit_Framework_TestCase
                 '$.foo[0]',
                 "The path of '$.foo[0]' requires to be a string, integer is given",
             ],
+
+            // Custom Types
+            [
+                'foo',
+                'timestamp',
+                '$',
+                "The path of '$' requires to be a timestamp, string is given",
+            ],
+            [
+                ['foo' => 'bar'],
+                ['foo' => 'timestamp'],
+                '$.foo',
+                "The path of '$.foo' requires to be a timestamp, string is given",
+            ],
+
         ];
     }
 

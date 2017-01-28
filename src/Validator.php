@@ -38,22 +38,27 @@ class Validator
 
         $validators = [];
         foreach ($types as $type => $func) {
-            $validators[$type] = function ($value) use ($func, $type) {
-                if ($func($value))  {
-                    return true;
-                }
-
-                $givenType = $this->getType($value);
-
-                $path = $this->getNormalizedPath();
-
-                $this->addError($path, "The path of '$path' requires to be a $type, $givenType is given");
-
-                return false;
-            };
+            $validators[$type] = $this->createValidator($type, $func);
         }
 
         return $validators;
+    }
+
+    protected function createValidator($type, callable $callable)
+    {
+        return function ($value) use ($callable, $type) {
+            if ($callable($value)) {
+                return true;
+            }
+
+            $givenType = $this->getType($value);
+
+            $path = $this->getNormalizedPath();
+
+            $this->addError($path, "The path of '$path' requires to be a $type, $givenType is given");
+
+            return false;
+        };
     }
 
     protected function isNumber($data)
@@ -96,7 +101,7 @@ class Validator
             throw new \InvalidArgumentException("The type: $type is already exists");
         }
 
-        $this->types[$type] = $this->buildTypeValidator($definition);
+        $this->types[$type] = $this->buildTypeValidator($type, $definition);
     }
 
     protected $errors = [];
@@ -139,10 +144,10 @@ class Validator
         return $this->matchInternal($data, $type);
     }
 
-    protected function buildTypeValidator($definition)
+    protected function buildTypeValidator($type, $definition)
     {
         if (is_callable($definition)) {
-            $validator = $definition;
+            $validator = $this->createValidator($type, $definition);
         } else if ($this->isObject($definition)) {
             $validator = function ($data) use ($definition) {
                 return $this->matchObject($data, $definition);
