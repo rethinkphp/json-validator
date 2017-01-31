@@ -10,12 +10,17 @@ namespace rethink\jsv;
 class Validator
 {
     protected $types = [];
+    protected $strict;
 
     /**
      * Constructor.
+     *
+     * @param $options
      */
-    public function __construct()
+    public function __construct(array $options = [])
     {
+        $this->strict = $options['strict'] ?? false;
+
         $this->types = $this->getBuiltInTypeValidators();
     }
 
@@ -111,7 +116,6 @@ class Validator
     {
         return strtr(implode('.', $this->path), [
             '.[' => '[',
-            '].' => ']',
         ]);
     }
 
@@ -180,17 +184,54 @@ class Validator
 
     protected function matchObject($data, $definition)
     {
+        if ($this->strict && !$this->matchObjectKeys($data, $definition)) {
+            return false;
+        }
+
+        $hasErrors = false;
         foreach ($definition as $name => $type) {
             array_push($this->path, $name);
             $result = $this->matchInternal($data[$name] ?? null, $type);
             array_pop($this->path);
 
             if (!$result) {
-                return false;
+                $hasErrors = true;
             }
         }
 
-        return true;
+        return !$hasErrors;
+    }
+
+    protected function matchObjectKeys($data, $definition)
+    {
+        $requiredKeys = array_keys($definition);
+        $providedKeys = array_keys($data);
+
+        sort($requiredKeys);
+        sort($providedKeys);
+
+        if ($requiredKeys === $providedKeys) {
+            return true;
+        }
+
+        $absenceKeys     = array_diff($requiredKeys, $providedKeys);
+        $notRequiredKeys = array_diff($providedKeys, $requiredKeys);
+
+        $message = "The object keys doesn't match the type definition";
+
+        if ($absenceKeys) {
+            $absenceKeys = implode(',', $absenceKeys);
+            $message .= ": '$absenceKeys' are absent";
+        }
+
+        if ($notRequiredKeys) {
+            $notRequiredKeys = implode(',', $notRequiredKeys);
+            $message .= ": '$notRequiredKeys' are not required";
+        }
+
+        $this->addError($this->getNormalizedPath(), $message);
+
+        return false;
     }
 
     protected function matchInternal($data, $type)

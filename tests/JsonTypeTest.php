@@ -12,9 +12,9 @@ use rethink\jsv\Validator;
  */
 class JsonTypeTest extends PHPUnit_Framework_TestCase
 {
-    protected function createValidator()
+    protected function createValidator($strictMode = false)
     {
-        $validator = new Validator();
+        $validator = new Validator(['strict' => $strictMode]);
 
         $validator->addType('timestamp', $this->timestampValidator());
 
@@ -198,6 +198,32 @@ class JsonTypeTest extends PHPUnit_Framework_TestCase
     public function testErrorMessages($value, $type, $key, $message)
     {
         $json = $this->createValidator();
+
+        $this->assertFalse($json->matches($value, $type));
+        $this->assertEquals($message, $json->getErrors()[$key] ?? '');
+    }
+
+    public function typeStrictData()
+    {
+        return [
+            [
+                ['key1' => 'v1', 'key3' => 'v3'],
+                [
+                    'key1' => 'string',
+                    'key2' => 'string',
+                ],
+                '$',
+                "The object keys doesn't match the type definition: 'key2' are absent: 'key3' are not required",
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider typeStrictData
+     */
+    public function testStrictMode($value, $type, $key, $message)
+    {
+        $json = $this->createValidator(true);
 
         $this->assertFalse($json->matches($value, $type));
         $this->assertEquals($message, $json->getErrors()[$key] ?? '');
