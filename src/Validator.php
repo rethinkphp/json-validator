@@ -236,6 +236,13 @@ class Validator
 
     protected function matchInternal($data, $type)
     {
+        if (is_string($type) && $type[0] === '?') {
+            if ($data === null) {
+                return true;
+            }
+            $type = substr($type, 1);
+        }
+
         if (!is_string($type)) {
             $definition = $type;
         } else if (isset($this->types[$type])) {

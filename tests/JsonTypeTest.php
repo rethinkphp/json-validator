@@ -228,4 +228,57 @@ class JsonTypeTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($json->matches($value, $type));
         $this->assertEquals($message, $json->getErrors()[$key] ?? '');
     }
+
+    public function typeNullableData()
+    {
+        return [
+            [
+                [
+                    'name' => 'foo',
+                    'gender' => null,
+                ],
+                [
+                    'name' => 'string',
+                    'gender' => '?string',
+                ],
+                true,
+            ],
+            [
+                ['foo', 'bar', null],
+                ['?string'],
+                true,
+            ],
+            [
+                [
+                    'dt' =>  null,
+                ],
+                [
+                    'dt' => '?timestamp',
+                ],
+                true,
+            ],
+            [
+                'foo',
+                '?integer',
+                false,
+                '$',
+                'The path of \'$\' requires to be a integer, string is given',
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider typeNullableData
+     */
+    public function testNullableTypes($value, $type, $matched, $key = null, $message = null)
+    {
+        $json = $this->createValidator(true);
+
+        $method = $matched ? 'assertTrue' : 'assertFalse';
+        $this->$method($json->matches($value, $type));
+
+        if (!$matched) {
+            $this->assertEquals($message, $json->getErrors()[$key] ?? null);
+        }
+    }
 }
