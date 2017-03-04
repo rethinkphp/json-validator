@@ -14,13 +14,9 @@ class Validator
 
     /**
      * Constructor.
-     *
-     * @param $options
      */
-    public function __construct(array $options = [])
+    public function __construct()
     {
-        $this->strict = $options['strict'] ?? false;
-
         $this->types = $this->getBuiltInTypeValidators();
     }
 
@@ -139,11 +135,14 @@ class Validator
      *
      * @param $data
      * @param $type
+     * @param $strict
      * @return bool
      */
-    public function matches($data, $type)
+    public function matches($data, $type, $strict = false)
     {
         $this->reset();
+
+        $this->strict = $strict;
 
         return $this->matchInternal($data, $type);
     }

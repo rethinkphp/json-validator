@@ -12,9 +12,9 @@ use rethink\jsv\Validator;
  */
 class JsonTypeTest extends PHPUnit_Framework_TestCase
 {
-    protected function createValidator($strictMode = false)
+    protected function createValidator()
     {
-        $validator = new Validator(['strict' => $strictMode]);
+        $validator = new Validator();
 
         $validator->addType('timestamp', $this->timestampValidator());
 
@@ -223,9 +223,9 @@ class JsonTypeTest extends PHPUnit_Framework_TestCase
      */
     public function testStrictMode($value, $type, $key, $message)
     {
-        $json = $this->createValidator(true);
+        $json = $this->createValidator();
 
-        $this->assertFalse($json->matches($value, $type));
+        $this->assertFalse($json->matches($value, $type, true));
         $this->assertEquals($message, $json->getErrors()[$key] ?? '');
     }
 
