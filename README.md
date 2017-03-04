@@ -43,43 +43,43 @@ The following code snippets shows how we can define custom types through array o
 
 1. Define a composite type 
 
-```php
-$validator->addType('User', [
-    'name' => 'string',
-    'gender' => 'string',
-    'age' => '?integer',
-]);
-```
+    ```php
+    $validator->addType('User', [
+        'name' => 'string',
+        'gender' => 'string',
+        'age' => '?integer',
+    ]);
+    ```
 
-This example defines a custom type named `User`, which have three properties. name and gender require be a
-string, age requires be an integer but allows to be nullable.
+    This example defines a custom type named `User`, which have three properties. name and gender require be a
+    string, age requires be an integer but allows to be nullable.
 
 2. Define a list type
 
-```php
-$validator->addType('UserCollection', ['User']);
-```
+    ```php
+    $validator->addType('UserCollection', ['User']);
+    ```
 
-This defines `UserCollection` to be an array of `User`. In order to define a list type, the definition of the type much 
-contains only one element.
+    This defines `UserCollection` to be an array of `User`. In order to define a list type, the definition of the type much 
+    contains only one element.
 
 
 3. Define a type in callable
 
-```php
-$validator->addType('timestamp', function ($value) {
-    if ((!is_string($value) && !is_numeric($value)) || strtotime($value) === false) {
-        return false;
-    }
+    ```php
+    $validator->addType('timestamp', function ($value) {
+        if ((!is_string($value) && !is_numeric($value)) || strtotime($value) === false) {
+            return false;
+        }
 
-    $date = date_parse($value);
+        $date = date_parse($value);
 
-    return checkdate($date['month'], $date['day'], $date['year']);
-});
-```
+        return checkdate($date['month'], $date['day'], $date['year']);
+    });
+    ```
 
-It is also possible to define a type using a callable, which is useful to perform some validation on the data. Such as 
-the example above defined a timestamp type, that requires the data to be a valid datetime.
+    It is also possible to define a type using a callable, which is useful to perform some validation on the data. Such as 
+    the example above defined a timestamp type, that requires the data to be a valid datetime.
 
 ### Validate a Type
 
@@ -87,26 +87,26 @@ We can validate a type by the following two steps:
 
 1. Create a Validator instance
 
-```php
-use rethinkphp\jsv\Validator;
+    ```php
+    use rethinkphp\jsv\Validator;
 
-$validator = new Validator();
-// $validator->addType(...)  Add your custom type if necessary
-```
+    $validator = new Validator();
+    // $validator->addType(...)  Add your custom type if necessary
+    ```
 
 2. Preform the validation
 
-```php
-$matched = $validator->matches($data, 'User');
-if ($matched) {
-    // Validation passed
-} else {
-    $errors = $validator->getErrors();
-}
-```
+    ```php
+    $matched = $validator->matches($data, 'User');
+    if ($matched) {
+        // Validation passed
+    } else {
+        $errors = $validator->getErrors();
+    }
+    ```
 
-This example will check whether the given `$data` matches the type `User`, if validation fails, we can get the error 
-messages  through `getErrors()` method.
+    This example will check whether the given `$data` matches the type `User`, if validation fails, we can get the error 
+    messages  through `getErrors()` method.
 
 
 ### Strict Mode
