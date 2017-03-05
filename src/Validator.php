@@ -91,12 +91,12 @@ class Validator
     }
 
     /**
-     * Add a new type.
+     * Define a new type.
      *
      * @param string $type
      * @param mixed $definition
      */
-    public function addType(string $type, $definition)
+    public function defineType(string $type, $definition)
     {
         if (isset($this->types[$type])) {
             throw new \InvalidArgumentException("The type: $type is already exists");

@@ -37,14 +37,14 @@ By default, Json Validator shipped with seven kinds of built-in types:
 - array
 - object
 
-Besides the built-in types, it is possible to define your custom type via `addType()` method.
+Besides the built-in types, it is possible to define your custom type via `defineType()` method.
 
 The following code snippets shows how we can define custom types through array or callable.
 
 #### 1. Define a composite type 
 
 ```php
-$validator->addType('User', [
+$validator->defineType('User', [
     'name' => 'string',
     'gender' => 'string',
     'age' => '?integer',
@@ -57,7 +57,7 @@ string, age requires be an integer but allows to be nullable.
 #### 2. Define a list type
 
 ```php
-$validator->addType('UserCollection', ['User']);
+$validator->defineType('UserCollection', ['User']);
 ```
 
 This defines `UserCollection` to be an array of `User`. In order to define a list type, the definition of the type much 
@@ -67,7 +67,7 @@ contains only one element.
 #### 3. Define a type in callable
 
 ```php
-$validator->addType('timestamp', function ($value) {
+$validator->defineType('timestamp', function ($value) {
     if ((!is_string($value) && !is_numeric($value)) || strtotime($value) === false) {
         return false;
     }
@@ -91,7 +91,7 @@ We can validate a type by the following two steps:
 use rethinkphp\jsv\Validator;
 
 $validator = new Validator();
-// $validator->addType(...)  Add your custom type if necessary
+// $validator->defineType(...)  Add your custom type if necessary
 ```
 
 #### 2. Preform the validation

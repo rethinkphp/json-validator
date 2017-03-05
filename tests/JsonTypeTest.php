@@ -16,7 +16,7 @@ class JsonTypeTest extends PHPUnit_Framework_TestCase
     {
         $validator = new Validator();
 
-        $validator->addType('timestamp', $this->timestampValidator());
+        $validator->defineType('timestamp', $this->timestampValidator());
 
         return $validator;
     }
@@ -79,7 +79,7 @@ class JsonTypeTest extends PHPUnit_Framework_TestCase
     {
         $json = $this->createValidator();
 
-        $json->addType('user', $this->userType());
+        $json->defineType('user', $this->userType());
 
         $this->assertTrue($json->matches($this->userData(), 'user'));
     }
@@ -89,7 +89,7 @@ class JsonTypeTest extends PHPUnit_Framework_TestCase
     {
         $json = $this->createValidator();
 
-        $json->addType('user', $this->userType());
+        $json->defineType('user', $this->userType());
 
         $this->assertTrue($json->matches([$this->userData()], ['user']));
     }
