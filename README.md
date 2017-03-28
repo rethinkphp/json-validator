@@ -1,15 +1,15 @@
-# Json Validator
+# JSON Validator
 
-A Json Validator that designed to be elegant and easy to use. 
+A JSON Validator that designed to be elegant and easy to use. 
 
 ## Motivation
 
-Json Validation is a common task in automated API testing, Json-Schema is complex and not easy to use, so i
-created this library to simplify the json validation process and made json validation more elegant and fun.
+JSON Validation is a common task in automated API testing, JSON-Schema is complex and not easy to use, so i
+created this library to simplify the JSON validation process and made JSON validation more elegant and fun.
 
 ## Features
 
-* Json Schema validation, useful for automated API testing
+* JSON Schema validation, useful for automated API testing
 * Custom type support, it is possible to define your custom types and reuse it everywhere
 * Nullable type support
 * More is coming...
@@ -17,7 +17,7 @@ created this library to simplify the json validation process and made json valid
 
 ## Installation
 
-You can install the latest version of json validator with the following command:
+You can install the latest version of JSON validator with the following command:
 
 ```bash
 composer require  rethink/json-validator:dev-master 
@@ -27,7 +27,7 @@ composer require  rethink/json-validator:dev-master
 
 ### Types
 
-By default, Json Validator shipped with seven kinds of built-in types:
+By default, JSON Validator shipped with seven kinds of built-in types:
 
 - integer
 - double
