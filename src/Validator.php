@@ -183,6 +183,10 @@ class Validator
 
     protected function matchObject($data, $definition)
     {
+        if (is_object($data)) {
+            $data = (array)$data;
+        }
+
         if ($this->strict && !$this->matchObjectKeys($data, $definition)) {
             return false;
         }
