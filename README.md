@@ -88,7 +88,7 @@ We can validate a type by the following two steps:
 #### 1. Create a Validator instance
 
 ```php
-use rethinkphp\jsv\Validator;
+use rethink\jsv\Validator;
 
 $validator = new Validator();
 // $validator->defineType(...)  Add your custom type if necessary
