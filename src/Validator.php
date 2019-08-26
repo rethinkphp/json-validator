@@ -27,6 +27,7 @@ class Validator
             'double' => 'is_double',
             'boolean' => 'is_bool',
             'string' => 'is_string',
+            'NULL' => 'is_null',
             'number' => [$this, 'isNumber'],
             'array' =>  [$this, 'isArray'],
             'object' =>  [$this, 'isObject'],
