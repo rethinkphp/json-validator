@@ -246,30 +246,21 @@ class Validator
             }
 
             if (strpos($type, ',') !== false) {
-
                 $option = explode(',', $type);
 
                 $types = [];
                 foreach ($option as $key) {
-                    if ($this->getType($data) === substr($key, 1)) {
+                    $type = substr($key, 1);
+                    if ($this->matchInternalProcess($data, $type)) {
                         return true;
                     }
-                    $types[] = substr($key, 1);
                 }
-
-                $type = $types;
-            } else {
-                $type = substr($type, 1);
             }
+
+            $type = substr($type, 1);
         }
 
-        if ($this->isArray($type)) {
-            foreach ($type as $key) {
-                return $this->matchInternalProcess($data, $key);
-            }
-        } else {
-            return $this->matchInternalProcess($data, $type);
-        }
+        return $this->matchInternalProcess($data, $type);
     }
 
     protected function matchInternalProcess($data, $type)
