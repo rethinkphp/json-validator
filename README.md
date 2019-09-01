@@ -48,11 +48,12 @@ $validator->defineType('User', [
     'name' => 'string',
     'gender' => 'string',
     'age' => '?integer',
+    'rating' => '?integer,?boolean',
 ]);
 ```
 
-This example defines a custom type named `User`, which have three properties. name and gender require be a
-string, age requires be an integer but allows to be nullable.
+This example defines a custom type named `User`, which have four properties. name and gender require be a
+string, age requires be an integer but allows to be nullable, and rating required to integer but allows to be null or boolean.
 
 #### 2. Define a list type
 
