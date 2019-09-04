@@ -244,9 +244,31 @@ class Validator
             if ($data === null) {
                 return true;
             }
+
             $type = substr($type, 1);
         }
 
+        if (is_string($type) && strpos($type, '|') !== false) {
+            $option = explode('|', $type);
+
+            if (in_array($this->getType($data), $option)) {
+                $type = $this->getType($data);
+            } else {
+                foreach ($option as $key) {
+                    $givenType = $this->getType($data);
+                    $path      = $this->getNormalizedPath();
+
+                    $this->addError($path, "The path of '$path' requires to be a $type, $givenType is given");
+                    return false;
+                }
+            }
+        }
+
+        return $this->matchInternalProcess($data, $type);
+    }
+
+    protected function matchInternalProcess($data, $type)
+    {
         if (!is_string($type)) {
             $definition = $type;
         } else if (isset($this->types[$type])) {

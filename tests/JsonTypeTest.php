@@ -62,6 +62,7 @@ class JsonTypeTest extends PHPUnit_Framework_TestCase
             'gender' => 'string',
             'age' => 'integer',
             'tags' => ['string'],
+            'rating' => ['?integer|double'],
         ];
     }
 
@@ -72,6 +73,7 @@ class JsonTypeTest extends PHPUnit_Framework_TestCase
             'gender' => 'Male',
             'age' => 18,
             'tags' => ['Foo', 'Bar'],
+            'rating' => [null, 1, 2.5],
         ];
     }
 
@@ -83,7 +85,6 @@ class JsonTypeTest extends PHPUnit_Framework_TestCase
 
         $this->assertTrue($json->matches($this->userData(), 'user'));
     }
-
 
     public function testMatchArrayOfCustomType()
     {
@@ -173,6 +174,16 @@ class JsonTypeTest extends PHPUnit_Framework_TestCase
                 ],
                 '$.foo[0]',
                 "The path of '$.foo[0]' requires to be a string, integer is given",
+            ],
+            [
+                [
+                    'foo' => [3, 2, 1],
+                ],
+                [
+                    'foo' => ['string|double'],
+                ],
+                '$.foo[0]',
+                "The path of '$.foo[0]' requires to be a string|double, integer is given",
             ],
 
             // Custom Types
